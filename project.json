@@ -6,13 +6,34 @@
     "frameRate" : 60,
     "noCache" : false,
     "id" : "gameCanvas",
-    "renderMode" : 0,
+    "renderMode" : 1,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d", "cocostudio"],
+    "modules" : ["cocos2d", "cocostudio","ccpool"],
 
     "jsList" : [
         "src/resource.js",
-        "src/app.js"
+        "src/global/Constants.js",
+        "src/global/GameStats.js",
+        "src/global/Sound.js",
+        "src/global/MySchedule.js",
+        "src/global/OnTouch.js",
+        "src/global/UIConstants.js",
+        "src/global/StringConstants.js",
+        "src/exception/MyException.js",
+        "src/factory/ExceptionFactory.js",
+        "src/factory/ListenerFactory.js",
+        "src/gameSprite/Hero.js",
+        "src/gameSprite/Enemy.js",
+        "src/ui/GameUI.js",
+        "src/ui/MenuUI.js",
+        "src/ui/GamePauseUI.js",
+        "src/ui/GameOverUI.js",
+        "src/ui/FightLayerUI.js",
+        "src/Controller/GameController.js",
+        "src/Controller/HeroController.js",
+        "src/Controller/EnemyController.js",
+        "src/Scene/GameScene.js",
+        "src/Scene/MenuScene.js"
     ]
 }
