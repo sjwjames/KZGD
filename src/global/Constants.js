@@ -9,7 +9,7 @@ var Constants={
     heroState:{"idle":"idle","defence":"defence","attack":"attack","fail":"fail","die":"die"},
     enemyState:{"idle":"idle","walk":"walk","stop":"stop","attack":"attack","die":"die"},
     walkTime:5,
-    enemyHarm:10,
+    enemyHarm:100,
     enemyTypes:3,
     enemyAnimationLoop:6,
     enemyAnimationFrames:13,

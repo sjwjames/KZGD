@@ -25,7 +25,7 @@ EnemyController.generateEnemy= function () {
 };
 
 EnemyController.doHarm=function(harm){
-    if (GameStats.currentHeroState==Constants.heroState.defence||GameStats.currentHeroState==Constants.heroState.attack){
+    if (GameStats.currentHeroState!=Constants.heroState.idle){
         console.log("no harm");
         return false;
     }else{
@@ -33,7 +33,6 @@ EnemyController.doHarm=function(harm){
         GameStats.currentHealth-=harm;
         if (GameStats.currentHealth<0){
             GameStats.currentHealth=0;
-            GameController.over();
         }
         cc.eventManager.dispatchCustomEvent("failDefence",{"harm":harm});
         return true;

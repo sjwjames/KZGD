@@ -8,7 +8,8 @@ var GameStats={
     currentHealth:100,
     frameRate:60,
     currentWaveInterval:8,
-    currentEnemyNumber:0
+    currentEnemyNumber:0,
+    currentGrade:0
 };
 
 GameStats.refresh= function () {
@@ -19,4 +20,5 @@ GameStats.refresh= function () {
         GameStats.frameRate=60;
         GameStats.currentWaveInterval=8;
         GameStats.currentEnemyNumber=0;
+        GameStats.currentGrade=0;
 };

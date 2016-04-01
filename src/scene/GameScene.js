@@ -11,37 +11,36 @@ var GameScene = cc.Scene.extend({
       this.fightLayer=new FightLayerUI();
       this.addChild(this.gameUI,3);
       this.addChild(this.fightLayer,2);
-      cc.eventManager.addCustomListener("myGameOver",this.gameOver.bind(this));
-      cc.eventManager.addCustomListener("myGamePaused",this.gamePaused.bind(this));
-      cc.eventManager.addCustomListener("myGameResumed",this.gameResumed.bind(this));
-      cc.eventManager.addCustomListener("myGameRetried",this.gameRetried.bind(this));
     },
     onEnter:function(){
         this._super();
+        cc.eventManager.addCustomListener("myGameOver",this.onGameOver.bind(this));
+        cc.eventManager.addCustomListener("myGamePaused",this.onGamePaused.bind(this));
+        cc.eventManager.addCustomListener("myGameResumed",this.onGameResumed.bind(this));
     },
-    gamePaused: function (event) {
+    onGamePaused: function (event) {
         this.removeChild(this.gameUI,true);
         this.pauseUI=new GamePauseUI();
         this.addChild(this.pauseUI,3);
         cc.director.pause();
         return true;
     },
-    gameResumed: function (event) {
-        console.log("2");
+    onGameResumed: function (event) {
         this.removeChild(this.pauseUI,true);
         this.gameUI=new GameUI();
         this.addChild(this.gameUI,3);
         cc.director.resume();
     },
-    gameRetried: function (event) {
-        GameStats.refresh();
-        cc.director.runScene(new GameScene());
-        cc.director.resume();
-        return true;
-    },
-    gameOver: function (event) {
+    onGameOver: function (event) {
+        this.removeChild(this.gameUI,true);
         var gameOverUI=new GameOverUI();
-        this.removeAllChildren();
-        this.addChild(gameOverUI);
+        this.addChild(gameOverUI,3);
+        cc.director.pause();
+    },
+    onExit: function () {
+        this._super();
+        cc.eventManager.removeCustomListeners("myGameOver");
+        cc.eventManager.removeCustomListeners("myGamePaused");
+        cc.eventManager.removeCustomListeners("myGameResumed");
     }
 });

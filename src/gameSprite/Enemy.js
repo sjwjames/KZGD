@@ -53,7 +53,7 @@ var Enemy = cc.Sprite.extend({
     },
     goDie: function () {
         this.state=Constants.enemyState.die;
-       console.log("go die "+this.wave);
+        GameStats.currentGrade++;
     },
     reuse: function (wave) {
         this.wave=wave;
