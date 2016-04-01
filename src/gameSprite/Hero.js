@@ -12,32 +12,10 @@ var Hero = cc.Sprite.extend({
         this.idleAction = cc.animate(this.heroIdleAnimation);
         this.idleAction.repeatForever();
         this.runAction(this.idleAction);
-
-    },
-
-    defence: function (event) {
-        this.stopAction(this.idleAction);
-        var myData=event.getUserData();
-        var heroDefenceAnimation=new cc.Animation();
-        for (var i=0;i<defencePics.length;i++){
-            heroDefenceAnimation.addSpriteFrameWithFile(defencePics[i]);
-        }
-        heroDefenceAnimation.setDelayPerUnit(1/defencePics.length);
-        var defenceAction = cc.animate(heroDefenceAnimation);
-        var reverse=defenceAction.clone().reverse();
-        var callFunc=cc.callFunc(this.defenceBackToIdle,this,myData);
-        var sequence=cc.sequence(defenceAction,reverse,callFunc);
-        this.runAction(sequence);
-    },
-    defenceBackToIdle: function () {
-        var noEnemy=arguments[1].noEnemyAttack;
-        if (noEnemy){
-            this.runAction(this.idleAction);
-        }else{
-            this.attack();
-        }
-        HeroController.idle();
-
+        this.shield=new cc.Sprite("#shield.png");
+        this.shield.setPosition(cc.p(UIConstants.fightLayer.hero_x+30,cc.director.getVisibleSize().height/6));
+        this.addChild(this.shield,1);
+        this.shield.opacity=0;
     },
     onEnter: function () {
         this._super();
@@ -45,10 +23,43 @@ var Hero = cc.Sprite.extend({
         cc.eventManager.addCustomListener("heroDefence",this.defence.bind(this));
         cc.eventManager.addCustomListener("failDefence",this.failDefence.bind(this));
     },
+    defence: function (event) {
+        this.stopAction(this.idleAction);
+        var myData=event.getUserData();
+        var heroDefenceAnimation=new cc.Animation();
+        for (var i=0;i<defencePics.length;i++){
+            heroDefenceAnimation.addSpriteFrameWithFile(defencePics[i]);
+        }
+        heroDefenceAnimation.setDelayPerUnit(Constants.defenceTime/defencePics.length);
+        var defenceAction = cc.animate(heroDefenceAnimation);
+        var shieldVisible=cc.callFunc(function () {
+            var fadeIn=new cc.fadeIn(0.5);
+            this.shield.runAction(fadeIn);
+        },this);
+        var defenceSpawn=cc.sequence(shieldVisible,defenceAction);
+        var reverse=defenceAction.clone().reverse();
+        var shieldUnvisible=cc.callFunc(function () {
+            this.scheduleOnce(function () {
+                var fadeOut=new cc.fadeOut(0.5);
+                this.shield.runAction(fadeOut);
+            }.bind(this),1);
+        },this);
+        var revereSpawn=cc.spawn(reverse,shieldUnvisible);
+        var callFunc=cc.callFunc(this.defenceBackToIdle,this,myData);
+        var sequence=cc.sequence(defenceSpawn,revereSpawn,callFunc);
+        this.runAction(sequence);
+    },
+    defenceBackToIdle: function () {
+        var noEnemy=arguments[1].noEnemyAttack;
+        if (noEnemy&&(!GameStats.unResponsedAttack)){
+            this.runAction(this.idleAction);
+            HeroController.idle();
+        }else{
+            this.attack();
+        }
+    },
 
     attack: function () {
-        //动画
-
         HeroController.attack();
         this.runAction(this.idleAction);
     },
@@ -61,12 +72,15 @@ var Hero = cc.Sprite.extend({
         heroHurtAnimation.setDelayPerUnit(1/defenceFailurePics.length);
         var hurtAction=cc.animate(heroHurtAnimation);
         var hurtCallFunc=cc.callFunc(this.failBackToIdle,this);
-        var sequence=cc.sequence(hurtAction,hurtCallFunc);
         if(GameStats.currentHealth==0){
             var dieCallFunc=cc.callFunc(this.goDie,this);
-            sequence=cc.sequence(hurtAction,dieCallFunc);
+            var  sequence=cc.sequence(hurtAction,dieCallFunc);
+            this.runAction(sequence);
+        }else{
+            var sequence=cc.sequence(hurtAction,hurtCallFunc);
+            this.runAction(sequence);
         }
-        this.runAction(sequence);
+
     },
     failBackToIdle: function () {
         this.runAction(this.idleAction);
@@ -84,6 +98,7 @@ var Hero = cc.Sprite.extend({
         this.runAction(sequence);
     },
     onDie: function () {
+        GameStats.currentHeroState=Constants.heroState.die;
         cc.eventManager.dispatchCustomEvent("myGameOver");
     }
     ,

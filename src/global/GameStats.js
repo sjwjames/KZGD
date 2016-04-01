@@ -7,9 +7,11 @@ var GameStats={
     currentHeroState:Constants.heroState.idle,
     currentHealth:100,
     frameRate:60,
-    currentWaveInterval:8,
+    currentWaveInterval:4,
     currentEnemyNumber:0,
-    currentGrade:0
+    currentGrade:0,
+    unResponsedAttack:false,
+    currentAttackTime:Constants.attackTime
 };
 
 GameStats.refresh= function () {
@@ -21,4 +23,6 @@ GameStats.refresh= function () {
         GameStats.currentWaveInterval=8;
         GameStats.currentEnemyNumber=0;
         GameStats.currentGrade=0;
+        GameStats.unResponsedAttack=false;
+        GameStats.currentAttackTime=Constants.attackTime;
 };

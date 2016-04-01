@@ -18,8 +18,9 @@ GameController.retry= function () {
     cc.director.runScene(new GameScene());
     return true;
 };
-GameController.resume=function () {
+GameController.resume=function (event) {
     cc.eventManager.dispatchCustomEvent("myGameResumed");
+    event.stopPropagation();
 };
 GameController.quit= function () {
     GameStats.refresh();

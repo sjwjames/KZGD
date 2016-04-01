@@ -19,6 +19,9 @@ var defencePics=["res/hero/defence/1.png","res/hero/defence/2.png","res/hero/def
 var diePics=["res/hero/die/1.png","res/hero/die/2.png","res/hero/die/3.png","res/hero/die/4.png","res/hero/die/5.png","res/hero/die/6.png",
     "res/hero/die/7.png","res/hero/die/8.png","res/hero/die/9.png","res/hero/die/10.png","res/hero/die/11.png"];
 
+var enemy0=["res/enemy/enemy0/g1.png","res/enemy/enemy0/g2.png","res/enemy/enemy0/g3.png","res/enemy/enemy0/g4.png","res/enemy/enemy0/g5.png","res/enemy/enemy0/g6.png",
+    "res/enemy/enemy0/g7.png","res/enemy/enemy0/g8.png","res/enemy/enemy0/g9.png","res/enemy/enemy0/g10.png","res/enemy/enemy0/g11.png","res/enemy/enemy0/g12.png"];
+
 var g_resources = [];
 for (var i in res) {
     g_resources.push(res[i]);
@@ -37,4 +40,7 @@ for (var i in defencePics){
 
 for (var i in diePics){
     g_resources.push(diePics[i]);
+}
+for (var i in enemy0){
+    g_resources.push(enemy0[i]);
 }

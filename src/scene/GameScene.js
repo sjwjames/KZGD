@@ -9,7 +9,7 @@ var GameScene = cc.Scene.extend({
       this.addChild(bg,1);
       this.gameUI=new GameUI();
       this.fightLayer=new FightLayerUI();
-      this.addChild(this.gameUI,3);
+      this.addChild(this.gameUI,2);
       this.addChild(this.fightLayer,2);
     },
     onEnter:function(){
@@ -28,7 +28,7 @@ var GameScene = cc.Scene.extend({
     onGameResumed: function (event) {
         this.removeChild(this.pauseUI,true);
         this.gameUI=new GameUI();
-        this.addChild(this.gameUI,3);
+        this.addChild(this.gameUI,2);
         cc.director.resume();
     },
     onGameOver: function (event) {

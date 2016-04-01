@@ -19,6 +19,11 @@ var GameUI = cc.Layer.extend({
       this.addChild(this.healthIndex,4);
       this.addChild(this.healthIndex_left,4);
       this.addChild(this.healthIndex_right,4);
+      if (GameStats.currentHealth==0){
+         this.healthIndex.width=0;
+         this.healthIndex_left.visible=false;
+         this.healthIndex_right.visible=false;
+      }
       var pause=new cc.Sprite("#pause.png");
       pause.setPosition(cc.p(cc.director.getVisibleSize().width-pause.width-100,cc.director.getVisibleSize().height/7*6));
       this.addChild(pause,2);
@@ -31,7 +36,7 @@ var GameUI = cc.Layer.extend({
    },
    onEnter: function () {
       this._super();
-      cc.eventManager.addCustomListener("failDefence",this._getHurt.bind(this));
+      cc.eventManager.addCustomListener("getHurt",this._getHurt.bind(this));
    },
 
    onPause: function (touch,event) {
@@ -50,11 +55,12 @@ var GameUI = cc.Layer.extend({
          this.healthIndex.width*=(GameStats.currentHealth/Constants.heroHealth);
          this.healthIndex_right.setPosition(cc.p(this.healthIndex.x+this.healthIndex.width+6,cc.director.getVisibleSize().height/7*6-10));
       }
+      cc.eventManager.dispatchCustomEvent("failDefence");
 
    },
    onExit: function () {
       this._super();
-      cc.eventManager.removeCustomListeners("failDefence");
+      cc.eventManager.removeCustomListeners("getHurt");
    }
 
 
