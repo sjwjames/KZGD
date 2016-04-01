@@ -5,25 +5,45 @@ var GamePauseUI = cc.Layer.extend({
     ctor: function () {
         this._super();
         var bg=new cc.LayerColor(cc.color(0,0,0,125),cc.director.getVisibleSize().width,cc.director.getVisibleSize().height);
-        this.addChild(bg,2);
+        this.addChild(bg,1);
         var pause_text=new cc.Sprite("#pauseText.png");
         pause_text.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/4*3));
         this.addChild(pause_text,2);
-        var resume=new cc.MenuItemImage("#resume.png","#resume.png",this.onResume,this);
-        var retry=new cc.MenuItemImage("#retry.png","#retry.png",this.onRetry,this);
-        var quit=new cc.MenuItemImage("#quit.png","#quit.png",this.onQuit,this);
-        var menu=new cc.Menu(resume,retry,quit);
-        menu.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2-50));
-        menu.alignItemsVerticallyWithPadding(10);
-        this.addChild(menu,2);
+        var resumeBtn=new cc.Sprite("#resume.png");
+        resumeBtn.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2+70));
+        this.addChild(resumeBtn,2);
+        var retryBtn=new cc.Sprite("#retry.png");
+        retryBtn.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2-30));
+        this.addChild(retryBtn,2);
+        var quitBtn=new cc.Sprite("#quit.png");
+        quitBtn.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2-130));
+        this.addChild(quitBtn,2);
+        try{
+            var resumeListener=ListenerFactory.getTouchListener(this.onResume.bind(this));
+            cc.eventManager.addListener(resumeListener,resumeBtn);
+            var retryListener=ListenerFactory.getTouchListener(this.onRetry.bind(this));
+            cc.eventManager.addListener(retryListener,retryBtn);
+            var quitListener=ListenerFactory.getTouchListener(this.onQuit.bind(this));
+            cc.eventManager.addListener(quitListener,quitBtn);
+        }catch (ex){
+            console.log(ex.message);
+        }
     },
-    onRetry: function (event) {
-       GameController.retry();
+    onRetry: function (touch,event) {
+        if (OnTouch.withInReach(touch,event)){
+            GameController.retry();
+        }
+
     },
-    onResume: function (event) {
-       GameController.resume();
+    onResume: function (touch,event) {
+       if (OnTouch.withInReach(touch,event)){
+           GameController.resume(event);
+       }
     },
-    onQuit: function (event) {
-        GameController.quit();
+    onQuit: function (touch,event) {
+       if(OnTouch.withInReach(touch,event)){
+           GameController.quit();
+       }
+
     }
 });

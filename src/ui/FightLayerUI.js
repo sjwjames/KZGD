@@ -8,7 +8,7 @@ var FightLayerUI = cc.Layer.extend({
     ctor: function () {
         this._super();
         this.mySchedule=new MySchedule();
-        this.hero=new Hero(heroIdle[0]);
+        this.hero=new Hero(heroIdlePics[0]);
         this.enemyList=[];
         this.hero.setPosition(cc.p(UIConstants.fightLayer.hero_x,cc.director.getVisibleSize().height/UIConstants.fightLayer.hero_y_per));
         this.addChild(this.hero,2);
@@ -20,29 +20,49 @@ var FightLayerUI = cc.Layer.extend({
         }
         this.generateEnemy();
         this.mySchedule.mySchedule(this.generateEnemy,GameStats.currentWaveInterval,this);
+
+    },
+    onEnter: function () {
+        this._super();
         cc.eventManager.addCustomListener("eliminateEnemy",this.eliminateEnemy.bind(this));
         cc.eventManager.addCustomListener("accelerateWave",this._resetSchedule.bind(this));
     },
 
     onDefence: function (touch,event) {
         if (OnTouch.withInReach(touch,event)){
-            console.log("defence pressed");
+            var defenceSprite=new cc.Sprite("#defence.png");
+            defenceSprite.setPosition(touch.getLocation());
+            this.addChild(defenceSprite);
+            var fadeInAction=cc.fadeIn(0.5);
+            var fadeOutAction=cc.fadeOut(0.5);
+            var sequence=cc.sequence(fadeInAction,fadeOutAction);
+            defenceSprite.runAction(sequence);
             HeroController.defence(this.enemyList);
         }
-
     },
 
     eliminateEnemy: function () {
+        var blade=new cc.Sprite("#blade.png");
+        blade.setPosition(cc.p(this.hero.x+80,this.hero.y));
+        this.addChild(blade);
+        var onFlying=new cc.callFunc(function () {
+            this.removeChild(blade,true);
+        },this);
+        var flyMotion=cc.moveTo(0.5,cc.p(cc.director.getVisibleSize().width,this.hero.y));
+        var sequence=cc.sequence(flyMotion,onFlying);
+        blade.runAction(sequence);
         for (var i=0;i<this.enemyList.length;i++){
             this.enemyList[i].goDie();
             this.removeChild(this.enemyList[i]);
         }
         this.enemyList=[];
         GameStats.currentEnemyNumber=0;
+        GameStats.unResponsedAttack=false;
+        HeroController.idle();
     },
 
     generateEnemy: function () {
-        if(GameStats.currentEnemyNumber<4){
+        if(GameStats.currentEnemyNumber<Constants.maxEnemy){
             var enemy=EnemyController.generateEnemy();
             this.enemyList.push(enemy);
             this._addEnemy(enemy);
@@ -56,8 +76,13 @@ var FightLayerUI = cc.Layer.extend({
         enemy.walk();
     },
     _resetSchedule: function () {
-        GameStats.currentWaveInterval=Math.pow(GameStats.currentWaveInterval,0.9);
         this.unschedule(this.generateEnemy);
         this.mySchedule.mySchedule(this.generateEnemy,GameStats.currentWaveInterval,this);
+    },
+    onExit: function () {
+        this._super();
+        cc.eventManager.removeCustomListeners("eliminateEnemy");
+        cc.eventManager.removeCustomListeners("accelerateWave");
+        this.enemyList=[];
     }
 });
