@@ -12,7 +12,7 @@ ListenerFactory.getTouchListener=(function () {
         var argumentLength=arguments.length;
         var myListener=cc.EventListener.create({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            swallowTouches: false,
+            swallowTouches: true
         });
         if (argumentLength==0){
             throw ExceptionFactory.getNullArgumentExcption();

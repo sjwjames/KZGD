@@ -13,8 +13,8 @@ var FightLayerUI = cc.Layer.extend({
         this.hero.setPosition(cc.p(UIConstants.fightLayer.hero_x,cc.director.getVisibleSize().height/UIConstants.fightLayer.hero_y_per));
         this.addChild(this.hero,2);
         try{
-            var listener=ListenerFactory.getTouchListener(this.onDefence.bind(this));
-            cc.eventManager.addListener(listener,this);
+            this.listener=ListenerFactory.getTouchListener(this.onDefence.bind(this));
+            cc.eventManager.addListener(this.listener,this);
         }catch (ex){
             console.log(ex.message);
         }
@@ -32,11 +32,21 @@ var FightLayerUI = cc.Layer.extend({
         if (OnTouch.withInReach(touch,event)){
             var defenceSprite=new cc.Sprite("#defence.png");
             defenceSprite.setPosition(touch.getLocation());
-            this.addChild(defenceSprite);
-            var fadeInAction=cc.fadeIn(0.5);
-            var fadeOutAction=cc.fadeOut(0.5);
+            this.addChild(defenceSprite,2,2);
+            var circle=new cc.Sprite("#circle.png");
+            circle.setPosition(touch.getLocation());
+            circle.scale=0.8;
+            this.addChild(circle,2,3);
+            var fadeInAction=cc.fadeIn(0.8);
+            var fadeOutAction=cc.fadeOut(0.8);
             var sequence=cc.sequence(fadeInAction,fadeOutAction);
             defenceSprite.runAction(sequence);
+            var circleFadeIn=cc.fadeIn(0.5);
+            var circleFadeOut=cc.fadeOut(0.5);
+            var circleScale=cc.scaleTo(0.5,2,2);
+            var circleSpawn=cc.spawn(circleFadeOut,circleScale);
+            var circleSequence=cc.sequence(circleFadeIn,circleSpawn);
+            circle.runAction(circleSequence);
             HeroController.defence(this.enemyList);
         }
     },

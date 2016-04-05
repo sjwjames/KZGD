@@ -10,7 +10,7 @@ var Constants={
     heroState:{"idle":"idle","defence":"defence","attack":"attack","fail":"fail","die":"die"},
     enemyState:{"idle":"idle","walk":"walk","stop":"stop","attack":"attack","die":"die"},
     walkTime:1,
-    enemyHarm:100,
+    enemyHarm:0,
     enemyTypes:3,
     enemyAttackAccRate:0.8,
     waveAccRate:0.8,

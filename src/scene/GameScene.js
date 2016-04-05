@@ -22,6 +22,9 @@ var GameScene = cc.Scene.extend({
         this.removeChild(this.gameUI,true);
         this.pauseUI=new GamePauseUI();
         this.addChild(this.pauseUI,3);
+        cc.eventManager.removeListener(this.fightLayer.listener);
+        this.fightLayer.removeChildByTag(2);
+        this.fightLayer.removeChildByTag(3);
         cc.director.pause();
         return true;
     },
@@ -29,12 +32,16 @@ var GameScene = cc.Scene.extend({
         this.removeChild(this.pauseUI,true);
         this.gameUI=new GameUI();
         this.addChild(this.gameUI,2);
+        cc.eventManager.addListener(this.fightLayer.listener,this.fightLayer);
         cc.director.resume();
     },
     onGameOver: function (event) {
         this.removeChild(this.gameUI,true);
         var gameOverUI=new GameOverUI();
         this.addChild(gameOverUI,3);
+        cc.eventManager.removeListener(this.fightLayer.listener);
+        this.fightLayer.removeChildByTag(2);
+        this.fightLayer.removeChildByTag(3);
         cc.director.pause();
     },
     onExit: function () {
