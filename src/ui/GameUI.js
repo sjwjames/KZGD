@@ -14,8 +14,8 @@ var GameUI = cc.Layer.extend({
       this.healthIndex_left=new cc.Sprite("#heathBarLeft.png");
       this.healthIndex_right=new cc.Sprite("#healthBarRight.png");
       this.healthIndex.setPosition(cc.p(cc.director.getVisibleSize().width/3-28,cc.director.getVisibleSize().height/7*6-17));
-      this.healthIndex_left.setPosition(cc.p(cc.director.getVisibleSize().width/3-34,cc.director.getVisibleSize().height/7*6-10));
-      this.healthIndex_right.setPosition(cc.p(this.healthIndex.x+this.healthIndex.width+6,cc.director.getVisibleSize().height/7*6-10));
+      this.healthIndex_left.setPosition(cc.p(this.healthIndex.x-this.healthIndex_left.width/2,this.healthIndex.y+this.healthIndex_left.height/2));
+      this.healthIndex_right.setPosition(cc.p(this.healthIndex.x+this.healthIndex.width+this.healthIndex_right.width/2-0.5,this.healthIndex.y+this.healthIndex_right.height/2));
       this.addChild(this.healthIndex,4);
       this.addChild(this.healthIndex_left,4);
       this.addChild(this.healthIndex_right,4);
@@ -43,8 +43,6 @@ var GameUI = cc.Layer.extend({
       if(OnTouch.withInReach(touch,event)){
         GameController.pause();
       }
-
-
    },
    _getHurt: function (event) {
       if (GameStats.currentHealth==0){
@@ -53,7 +51,7 @@ var GameUI = cc.Layer.extend({
          this.healthIndex_right.visible=false;
       }else{
          this.healthIndex.width*=(GameStats.currentHealth/Constants.heroHealth);
-         this.healthIndex_right.setPosition(cc.p(this.healthIndex.x+this.healthIndex.width+6,cc.director.getVisibleSize().height/7*6-10));
+         this.healthIndex_right.x=this.healthIndex.x+this.healthIndex.width+this.healthIndex_right.width/2-0.5;
       }
       cc.eventManager.dispatchCustomEvent("failDefence");
 

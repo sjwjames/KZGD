@@ -11,7 +11,8 @@ var GameStats={
     currentEnemyNumber:0,
     currentGrade:0,
     unResponsedAttack:false,
-    currentAttackTime:Constants.attackTime
+    currentAttackTime:Constants.attackTime,
+    hasEntered:false
 };
 
 GameStats.refresh= function () {
@@ -25,4 +26,5 @@ GameStats.refresh= function () {
         GameStats.currentGrade=0;
         GameStats.unResponsedAttack=false;
         GameStats.currentAttackTime=Constants.attackTime;
+        GameStats.hasEntered=false;
 };

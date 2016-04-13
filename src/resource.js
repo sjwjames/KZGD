@@ -5,7 +5,9 @@ var res = {
     enemy1:"res/enemy/enemy1.png",
     enemy2:"res/enemy/enemy2.png",
     gameBg:"res/bg/bg.jpg",
-    startBg:"res/bg/startBg.jpg"
+    startBg:"res/bg/startBg.jpg",
+    scrollBar:"res/ui/scrollBar.png",
+    scrollBtn:"res/ui/scrollBtn.png"
 };
 var heroIdlePics=["res/hero/idle/1.png","res/hero/idle/2.png","res/hero/idle/3.png","res/hero/idle/4.png","res/hero/idle/5.png","res/hero/idle/6.png",
     "res/hero/idle/7.png","res/hero/idle/8.png","res/hero/idle/9.png","res/hero/idle/10.png","res/hero/idle/11.png"];

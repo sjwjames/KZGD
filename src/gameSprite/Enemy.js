@@ -43,6 +43,11 @@ var Enemy = cc.Sprite.extend({
         var onAttackAction=cc.callFunc(this.unattack,this);
         var sequence=cc.sequence(animationAction,onAttackAction);
         this.runAction(sequence);
+        if(!GameStats.hasEntered){
+            this.scheduleOnce(function () {
+                cc.eventManager.dispatchCustomEvent("firstAttack");
+            }.bind(this),this.attackTime/enemy0.length*2);
+        }
     },
     unattack: function () {
         //判断是否造成伤害
@@ -53,6 +58,10 @@ var Enemy = cc.Sprite.extend({
     goDie: function () {
         this.state=Constants.enemyState.die;
         GameStats.currentGrade++;
+        if(!GameStats.hasEntered){
+            GameStats.hasEntered=true;
+            cc.sys.localStorage.setItem("entered",true);
+        }
     },
     reuse: function (wave) {
         this.wave=wave;

@@ -9,7 +9,7 @@
     "renderMode" : 1,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d", "cocostudio","ccpool"],
+    "modules" : ["cocos2d","extensions"],
 
     "jsList" : [
         "src/resource.js",
@@ -25,11 +25,15 @@
         "src/factory/ListenerFactory.js",
         "src/gameSprite/Hero.js",
         "src/gameSprite/Enemy.js",
+        "src/ui/RankText.js",
+        "src/ui/RankLine.js",
+        "src/ui/MySlider.js",
         "src/ui/GameUI.js",
         "src/ui/MenuUI.js",
         "src/ui/GamePauseUI.js",
         "src/ui/GameOverUI.js",
         "src/ui/FightLayerUI.js",
+        "src/ui/RankUI.js",
         "src/Controller/GameController.js",
         "src/Controller/HeroController.js",
         "src/Controller/EnemyController.js",

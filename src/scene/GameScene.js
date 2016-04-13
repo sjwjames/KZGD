@@ -11,6 +11,12 @@ var GameScene = cc.Scene.extend({
       this.fightLayer=new FightLayerUI();
       this.addChild(this.gameUI,2);
       this.addChild(this.fightLayer,2);
+      var entered=cc.sys.localStorage.getItem("entered");
+      if(entered){
+          GameStats.hasEntered=true;
+      }else{
+          GameStats.hasEntered=false;
+      }
     },
     onEnter:function(){
         this._super();
@@ -23,8 +29,12 @@ var GameScene = cc.Scene.extend({
         this.pauseUI=new GamePauseUI();
         this.addChild(this.pauseUI,3);
         cc.eventManager.removeListener(this.fightLayer.listener);
-        this.fightLayer.removeChildByTag(2);
-        this.fightLayer.removeChildByTag(3);
+        if (this.fightLayer.getChildByTag(2)){
+            this.fightLayer.removeChildByTag(2);
+        }
+        if (this.fightLayer.getChildByTag(3)){
+            this.fightLayer.removeChildByTag(3);
+        }
         cc.director.pause();
         return true;
     },
@@ -40,8 +50,12 @@ var GameScene = cc.Scene.extend({
         var gameOverUI=new GameOverUI();
         this.addChild(gameOverUI,3);
         cc.eventManager.removeListener(this.fightLayer.listener);
-        this.fightLayer.removeChildByTag(2);
-        this.fightLayer.removeChildByTag(3);
+        if (this.fightLayer.getChildByTag(2)){
+            this.fightLayer.removeChildByTag(2);
+        }
+        if (this.fightLayer.getChildByTag(3)){
+            this.fightLayer.removeChildByTag(3);
+        }
         cc.director.pause();
     },
     onExit: function () {
