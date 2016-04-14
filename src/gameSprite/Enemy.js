@@ -71,13 +71,11 @@ var Enemy = cc.Sprite.extend({
                 if(!GameStats.hasEntered){
                     cc.eventManager.dispatchCustomEvent("firstAttack");
                 }
-
+                EnemyController.doHarm(this.harm);
             }else{
                 this.state=Constants.enemyState.attack;
             }
-            if (this.animationAction.getCurrentFrameIndex()<=5) {
-                EnemyController.doHarm(this.harm);
-            }
+
         }
     },
     onExit: function () {
