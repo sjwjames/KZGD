@@ -5,9 +5,11 @@ var MenuScene = cc.Scene.extend({
     ctor:function(){
         this._super();
         var menuUI = new MenuUI();
-        this.addChild(menuUI);
+        this.addChild(menuUI,1);
     },
     onEnter:function () {
         this._super();
+        cc.director.resume();
+        kzgd.showOrientationTip();
     }
 });

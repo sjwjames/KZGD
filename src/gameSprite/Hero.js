@@ -13,7 +13,7 @@ var Hero = cc.Sprite.extend({
         this.idleAction.repeatForever();
         this.runAction(this.idleAction);
         this.shield=new cc.Sprite("#shield.png");
-        this.shield.setPosition(cc.p(UIConstants.fightLayer.hero_x+30,cc.director.getVisibleSize().height/6));
+        this.shield.setPosition(cc.p(UIConstants.fightLayer.hero_x+30,cc.winSize.height/6));
         this.addChild(this.shield,1);
         this.shield.opacity=0;
     },
@@ -21,11 +21,10 @@ var Hero = cc.Sprite.extend({
         this._super();
         cc.eventManager.addCustomListener("heroAttack",this.attack.bind(this));
         cc.eventManager.addCustomListener("heroDefence",this.defence.bind(this));
-        cc.eventManager.addCustomListener("failDefence",this.failDefence.bind(this));
+        cc.eventManager.addCustomListener("getHurt",this.failDefence.bind(this));
     },
     defence: function (event) {
         this.stopAction(this.idleAction);
-        var myData=event.getUserData();
         var heroDefenceAnimation=new cc.Animation();
         for (var i=0;i<defencePics.length;i++){
             heroDefenceAnimation.addSpriteFrameWithFile(defencePics[i]);
@@ -45,17 +44,21 @@ var Hero = cc.Sprite.extend({
             }.bind(this),1);
         },this);
         var revereSpawn=cc.spawn(reverse,shieldUnvisible);
-        var callFunc=cc.callFunc(this.defenceBackToIdle,this,myData);
+        var callFunc=cc.callFunc(this.defenceBackToIdle,this);
         var sequence=cc.sequence(defenceSpawn,revereSpawn,callFunc);
         this.runAction(sequence);
     },
     defenceBackToIdle: function () {
-        var noEnemy=arguments[1].noEnemyAttack;
-        if (noEnemy&&(!GameStats.unResponsedAttack)){
-            this.runAction(this.idleAction);
-            HeroController.idle();
-        }else{
+        if (GameStats.currentHeroState==Constants.heroState.success){
             this.attack();
+        }else {
+            if(GameStats.unResponsedAttack){
+                var harm=GameStats.unResponsedHarm;
+                HeroController.getHurt(harm);
+            }else{
+                this.runAction(this.idleAction);
+                HeroController.idle();
+            }
         }
     },
 
@@ -65,6 +68,8 @@ var Hero = cc.Sprite.extend({
     },
     failDefence: function (event) {
         this.stopAction(this.idleAction);
+        GameStats.unResponsedHarm=0;
+        GameStats.unResponsedAttack=false;
         var heroHurtAnimation=new cc.Animation();
         for (var i=0;i<defenceFailurePics.length;i++){
             heroHurtAnimation.addSpriteFrameWithFile(defenceFailurePics[i]);
@@ -106,7 +111,7 @@ var Hero = cc.Sprite.extend({
         this._super();
         cc.eventManager.removeCustomListeners("heroAttack");
         cc.eventManager.removeCustomListeners("heroDefence");
-        cc.eventManager.removeCustomListeners("failDefence");
+        cc.eventManager.removeCustomListeners("getHurt");
     }
 
 });

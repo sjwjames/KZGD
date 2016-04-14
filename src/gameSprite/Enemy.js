@@ -18,8 +18,8 @@ var Enemy = cc.Sprite.extend({
         this.mySchedule=new MySchedule();
     },
     walk: function () {
-        var time=(cc.director.getVisibleSize().width-(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber))/((cc.director.getVisibleSize().width-(UIConstants.fightLayer.hero_x+this.width))/this.walkTime);
-        var walkAction=cc.moveTo(time,cc.p(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber,cc.director.getVisibleSize().height/UIConstants.fightLayer.enemy_y_per));
+        var time=(cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber-100))/((cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width-100))/this.walkTime);
+        var walkAction=cc.moveTo(time,cc.p(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber-100,cc.winSize.height/UIConstants.fightLayer.enemy_y_per));
         var callFunc=cc.callFunc(this.stop,this);
         var sequence = cc.sequence(walkAction,callFunc);
         this.runAction(sequence);
@@ -34,26 +34,21 @@ var Enemy = cc.Sprite.extend({
         this.state=Constants.enemyState.attack;
         //播放攻击动画
         var animation = new cc.Animation();
-        for (var i=0;i<enemy0.length;i++){
-            //animation.addSpriteFrameWithFile("res/enemy/enemy"+(this.type)+"/g"+i+".png");
-            animation.addSpriteFrameWithFile(enemy0[i]);
+        for (var i=1;i<=enemy0.length;i++){
+            animation.addSpriteFrameWithFile("res/enemy/enemy"+(this.type)+"/g"+i+".png");
         }
         animation.setDelayPerUnit(this.attackTime/enemy0.length);
-        var animationAction = cc.animate(animation);
+        this.animationAction = cc.animate(animation);
         var onAttackAction=cc.callFunc(this.unattack,this);
-        var sequence=cc.sequence(animationAction,onAttackAction);
+        var sequence=cc.sequence(this.animationAction,onAttackAction);
+        this.mySchedule.mySchedule(this.onAttackAnimated,GameStats.currentAttackTime/Constants.enemyAttackFrames,this);
         this.runAction(sequence);
-        if(!GameStats.hasEntered){
-            this.scheduleOnce(function () {
-                cc.eventManager.dispatchCustomEvent("firstAttack");
-            }.bind(this),this.attackTime/enemy0.length*2);
-        }
+
     },
     unattack: function () {
         //判断是否造成伤害
-        EnemyController.doHarm(this.harm);
         this.state=Constants.enemyState.idle;
-        this.scheduleOnce(this.attack.bind(this),this.attackInterval);
+        this.scheduleOnce(this.attack.bind(this),Constants.attackInterval);
     },
     goDie: function () {
         this.state=Constants.enemyState.die;
@@ -67,6 +62,26 @@ var Enemy = cc.Sprite.extend({
         this.wave=wave;
     },
     unuse: function () {
+
+    },
+    onAttackAnimated: function () {
+        if(this.animationAction){
+            if (this.animationAction.getCurrentFrameIndex()<=7){
+                this.state=Constants.enemyState.attacking;
+                if(!GameStats.hasEntered){
+                    cc.eventManager.dispatchCustomEvent("firstAttack");
+                }
+
+            }else{
+                this.state=Constants.enemyState.attack;
+            }
+            if (this.animationAction.getCurrentFrameIndex()<=5) {
+                EnemyController.doHarm(this.harm);
+            }
+        }
+    },
+    onExit: function () {
+        this._super();
 
     }
 });

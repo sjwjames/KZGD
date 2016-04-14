@@ -50,6 +50,27 @@
  }
  *
  */
+var kzgd={};
+kzgd.showOrientationTip= function () {
+    if(!kzgd.orientationTip){
+        kzgd.orientationTip=new cc.LayerColor(cc.color(0, 0, 0), cc.visibleRect.width, cc.visibleRect.height);
+        var rotateImg =new cc.Sprite(res.rotateImg);
+        rotateImg.setPosition(cc.visibleRect.center);
+        kzgd.orientationTip.addChild(rotateImg,1);
+    }
+    kzgd.orientationTip.removeFromParent();
+        if(window.innerHeight<window.innerWidth){
+            if (cc.director.isPaused()){
+                cc.director.resume();
+            }
+        }else {
+            cc.director.getRunningScene().addChild(kzgd.orientationTip,100);
+            cc.director.pause();
+        }
+
+};
+
+
 
 cc.game.onStart = function(){
     if(!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
@@ -59,16 +80,22 @@ cc.game.onStart = function(){
     cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS ? true : false);
     // Adjust viewport meta
     cc.view.adjustViewPort(true);
+    cc.view.enableAutoFullScreen(true);
     // Setup the resolution policy and design resolution size
-    cc.view.setDesignResolutionSize(1136, 634, cc.ResolutionPolicy.NO_BORDER);
+    cc.view.setDesignResolutionSize(1136, 634, cc.ResolutionPolicy.SHOW_ALL);
     // Instead of set design resolution, you can also set the real pixel resolution size
     // Uncomment the following line and delete the previous line.
     // cc.view.setRealPixelResolution(960, 640, cc.ResolutionPolicy.SHOW_ALL);
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
+    cc.view.setResizeCallback(function() {
+        kzgd.showOrientationTip();
+    });
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
+
         cc.director.runScene(new MenuScene());
+
     }, this);
 };
 cc.game.run();

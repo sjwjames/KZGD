@@ -5,7 +5,7 @@ var GameScene = cc.Scene.extend({
     ctor:function(){
       this._super();
       var bg=new cc.Sprite(res.gameBg);
-      bg.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2));
+      bg.setPosition(cc.p(cc.winSize.width/2,cc.winSize.height/2));
       this.addChild(bg,1);
       this.gameUI=new GameUI();
       this.fightLayer=new FightLayerUI();
@@ -20,6 +20,7 @@ var GameScene = cc.Scene.extend({
     },
     onEnter:function(){
         this._super();
+        cc.director.resume();
         cc.eventManager.addCustomListener("myGameOver",this.onGameOver.bind(this));
         cc.eventManager.addCustomListener("myGamePaused",this.onGamePaused.bind(this));
         cc.eventManager.addCustomListener("myGameResumed",this.onGameResumed.bind(this));

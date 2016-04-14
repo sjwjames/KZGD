@@ -4,10 +4,10 @@
 var RankUI = cc.Layer.extend({
     ctor: function () {
         this._super();
-        var bg=new cc.LayerColor(cc.color(0,0,0,200),cc.director.getVisibleSize().width,cc.director.getVisibleSize().height);
+        var bg=new cc.LayerColor(cc.color(0,0,0,200),cc.winSize.width,cc.winSize.height);
         this.addChild(bg,1);
         var returnBtn=new cc.Sprite("#return.png");
-        returnBtn.setPosition(cc.p(cc.director.getVisibleSize().width+cc.director.getVisibleOrigin().x-returnBtn.width-50,cc.director.getVisibleSize().height+cc.director.getVisibleOrigin().y-100));
+        returnBtn.setPosition(cc.p(cc.winSize.width+cc.director.getVisibleOrigin().x-returnBtn.width-50,cc.winSize.height+cc.director.getVisibleOrigin().y-100));
         this.addChild(returnBtn,2);
         try{
             var returnListener=ListenerFactory.getTouchListener(this.onReturn.bind(this));
@@ -16,18 +16,18 @@ var RankUI = cc.Layer.extend({
             console.log(ex.message);
         }
         var myRankText=new cc.Sprite("#myRank.png");
-        myRankText.setPosition(cc.p(cc.director.getVisibleSize().width/2+cc.director.getVisibleOrigin().x,returnBtn.y));
+        myRankText.setPosition(cc.p(cc.winSize.width/2+cc.director.getVisibleOrigin().x,returnBtn.y));
         this.addChild(myRankText,2);
 
         var url="https://avatars1.githubusercontent.com/u/7036047?v=3&u=0d7716cfbc894aef106ddb888aa30842fd20e5f9&s=140";
         var rankInfo={name:"sjwjames",grade:100,rankNum:100,url:url};
         var myRankLine=new RankLine(rankInfo);
-        myRankLine.setPosition(cc.p(cc.director.getVisibleSize().width/3+cc.director.getVisibleOrigin().x,returnBtn.y-80));
+        myRankLine.setPosition(cc.p(cc.winSize.width/3+cc.director.getVisibleOrigin().x,returnBtn.y-80));
         this.addChild(myRankLine,2);
 
 
         var allRankText=new cc.Sprite("#allRank.png");
-        allRankText.setPosition(cc.p(cc.director.getVisibleSize().width/2+cc.director.getVisibleOrigin().x,cc.director.getVisibleSize().height/2+cc.director.getVisibleOrigin().y+20));
+        allRankText.setPosition(cc.p(cc.winSize.width/2+cc.director.getVisibleOrigin().x,cc.winSize.height/2+cc.director.getVisibleOrigin().y+20));
         this.addChild(allRankText,2);
         //
         this.listView=new ccui.ListView();
@@ -61,7 +61,7 @@ var RankUI = cc.Layer.extend({
         this.addChild(this.listView,2);
 
         this.slider=new MySlider("#scrollBar.png","#scrollBar.png","#scrollBtn.png",this.listView);
-        this.slider.setPosition(cc.p(cc.director.getVisibleOrigin().x+cc.director.getVisibleSize().width/5*4,cc.director.getVisibleOrigin().y+this.listView.y+90));
+        this.slider.setPosition(cc.p(cc.director.getVisibleOrigin().x+cc.winSize.width/5*4,cc.director.getVisibleOrigin().y+this.listView.y+90));
         this.slider.setMaximumValue(1);
         this.slider.setMinimumValue(0);
         this.slider.setValue(0);

@@ -9,16 +9,19 @@ var HeroController=cc.Class.extend({
 });
 
 HeroController.defence=function (enemyList) {
+    console.log(GameStats.currentHeroState);
     if (GameStats.currentHeroState==Constants.heroState.idle){
         GameStats.currentHeroState=Constants.heroState.defence;
-        var noEnemyAttack=true;
+        //var noEnemyAttack=true;
         for (var i=0;i<enemyList.length;i++){
-            if (enemyList[i].state==Constants.enemyState.attack){
-                noEnemyAttack=false;
+            console.log(enemyList[i].state);
+            if (enemyList[i].state==Constants.enemyState.attacking){
+                //noEnemyAttack=false;
+                GameStats.currentHeroState=Constants.heroState.success;
                 break;
             }
         }
-        cc.eventManager.dispatchCustomEvent("heroDefence",{"noEnemyAttack":noEnemyAttack});
+        cc.eventManager.dispatchCustomEvent("heroDefence");
     }else{
         console.log("not prepared to defend "+GameStats.currentHeroState);
     }
@@ -30,4 +33,13 @@ HeroController.attack=function () {
 
 HeroController.idle= function () {
     GameStats.currentHeroState=Constants.heroState.idle;
+};
+
+HeroController.getHurt= function (harm) {
+    GameStats.currentHeroState=Constants.heroState.fail;
+    GameStats.currentHealth-=harm;
+    if (GameStats.currentHealth<0){
+        GameStats.currentHealth=0;
+    }
+    cc.eventManager.dispatchCustomEvent("getHurt",{"harm":harm});
 };

@@ -10,7 +10,7 @@ var FightLayerUI = cc.Layer.extend({
         this.mySchedule=new MySchedule();
         this.hero=new Hero(heroIdlePics[0]);
         this.enemyList=[];
-        this.hero.setPosition(cc.p(UIConstants.fightLayer.hero_x,cc.director.getVisibleSize().height/UIConstants.fightLayer.hero_y_per));
+        this.hero.setPosition(cc.p(UIConstants.fightLayer.hero_x,cc.winSize.height/UIConstants.fightLayer.hero_y_per));
         this.addChild(this.hero,2);
         try{
             this.listener=ListenerFactory.getTouchListener(this.onDefence.bind(this));
@@ -20,7 +20,6 @@ var FightLayerUI = cc.Layer.extend({
         }
         this.generateEnemy();
         this.mySchedule.mySchedule(this.generateEnemy,GameStats.currentWaveInterval,this);
-
     },
     onEnter: function () {
         this._super();
@@ -34,17 +33,17 @@ var FightLayerUI = cc.Layer.extend({
             var defenceSprite=new cc.Sprite("#defence.png");
             defenceSprite.setPosition(touch.getLocation());
             this.addChild(defenceSprite,2,2);
-            var fadeInAction=cc.fadeIn(0.8);
-            var fadeOutAction=cc.fadeOut(0.8);
+            var fadeInAction=cc.fadeIn(0.2);
+            var fadeOutAction=cc.fadeOut(0.2);
             var sequence=cc.sequence(fadeInAction,fadeOutAction);
             defenceSprite.runAction(sequence);
             var circle=new cc.Sprite("#circle.png");
             circle.setPosition(touch.getLocation());
             circle.scale=0.8;
             this.addChild(circle,2,3);
-            var circleFadeIn=cc.fadeIn(0.5);
-            var circleFadeOut=cc.fadeOut(0.5);
-            var circleScale=cc.scaleTo(0.5,2,2);
+            var circleFadeIn=cc.fadeIn(0.2);
+            var circleFadeOut=cc.fadeOut(0.2);
+            var circleScale=cc.scaleTo(0.2,2,2);
             var circleSpawn=cc.spawn(circleFadeOut,circleScale);
             var circleSequence=cc.sequence(circleFadeIn,circleSpawn);
             circle.runAction(circleSequence);
@@ -59,7 +58,7 @@ var FightLayerUI = cc.Layer.extend({
         var onFlying=new cc.callFunc(function () {
             this.removeChild(blade,true);
         },this);
-        var flyMotion=cc.moveTo(0.5,cc.p(cc.director.getVisibleSize().width,this.hero.y));
+        var flyMotion=cc.moveTo(0.5,cc.p(cc.winSize.width,this.hero.y));
         var sequence=cc.sequence(flyMotion,onFlying);
         blade.runAction(sequence);
         for (var i=0;i<this.enemyList.length;i++){
@@ -69,6 +68,7 @@ var FightLayerUI = cc.Layer.extend({
         this.enemyList=[];
         GameStats.currentEnemyNumber=0;
         GameStats.unResponsedAttack=false;
+        GameStats.unResponsedHarm=0;
         HeroController.idle();
     },
 
@@ -91,7 +91,7 @@ var FightLayerUI = cc.Layer.extend({
 
     },
     _addEnemy: function (enemy) {
-        enemy.setPosition(cc.p(cc.director.getVisibleSize().width,cc.director.getVisibleSize().height/UIConstants.fightLayer.enemy_y_per));
+        enemy.setPosition(cc.p(cc.winSize.width,cc.winSize.height/UIConstants.fightLayer.enemy_y_per));
         this.addChild(enemy,2);
         GameStats.currentEnemyNumber++;
         enemy.walk();
@@ -103,11 +103,11 @@ var FightLayerUI = cc.Layer.extend({
     _firstAttack: function () {
         cc.director.pause();
         cc.eventManager.removeListener(this.listener);
-        var hintPanel=new cc.LayerColor(cc.color(0,0,0,126),cc.director.getVisibleSize().width,cc.director.getVisibleSize().height);
+        var hintPanel=new cc.LayerColor(cc.color(0,0,0,126),cc.winSize.width,cc.winSize.height);
         var hint=new cc.LabelTTF("按屏幕任何一处","Arial",15,cc.size(100,50),cc.TEXT_ALIGNMENT_CENTER,cc.TEXT_ALIGNMENT_CENTER);
-        hint.setPosition(cc.p(cc.director.getVisibleSize().width/2+40,cc.director.getVisibleSize().height/2));
+        hint.setPosition(cc.p(cc.winSize.width/2+40,cc.winSize.height/2));
         //var hintLayer=new cc.LayerColor(cc.color(255,255,255),100,50);
-        //hintLayer.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2));
+        //hintLayer.setPosition(cc.p(cc.winSize.width/2,cc.winSize.height/2));
         //hintLayer.addChild(hint,2);
         hintPanel.addChild(hint,2);
         this.addChild(hintPanel,3);
@@ -130,6 +130,9 @@ var FightLayerUI = cc.Layer.extend({
         cc.eventManager.removeCustomListeners("eliminateEnemy");
         cc.eventManager.removeCustomListeners("accelerateWave");
         cc.eventManager.removeCustomListeners("firstStop");
+        for (var enemy in this.enemyList){
+            this.enemyList[enemy]=null;
+        }
         this.enemyList=[];
     }
 });

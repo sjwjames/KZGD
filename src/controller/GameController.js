@@ -14,7 +14,6 @@ GameController.pause= function () {
 };
 GameController.retry= function () {
     GameStats.refresh();
-    cc.director.resume();
     cc.director.runScene(new GameScene());
     return true;
 };
@@ -24,7 +23,6 @@ GameController.resume=function (event) {
 };
 GameController.quit= function () {
     GameStats.refresh();
-    cc.director.resume();
     cc.director.runScene(new MenuScene());
     return true;
 };

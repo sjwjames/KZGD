@@ -14,8 +14,7 @@ EnemyController.generateEnemy= function () {
         return cc.pool._getFromPool(Enemy);
     }else{
         var wave=GameStats.currentWave;
-        //var type=wave%Constants.enemyTypes;
-        var type=0;
+        var type=wave%Constants.enemyTypes;
         var imgURL="res/enemy/enemy"+(type)+"/g1.png";
         GameStats.currentWave+=1;
         if(GameStats.currentWave%10==0){
@@ -28,18 +27,10 @@ EnemyController.generateEnemy= function () {
 };
 
 EnemyController.doHarm=function(harm){
-    if (GameStats.currentHeroState!=Constants.heroState.idle){
-        if(GameStats.currentHeroState==Constants.heroState.defence){
-            GameStats.unResponsedAttack=true;
-        }
-        return false;
-    }else{
-        GameStats.currentHeroState=Constants.heroState.fail;
-        GameStats.currentHealth-=harm;
-        if (GameStats.currentHealth<0){
-            GameStats.currentHealth=0;
-        }
-        cc.eventManager.dispatchCustomEvent("getHurt",{"harm":harm});
-        return true;
+    if (GameStats.currentHeroState==Constants.heroState.idle){
+        HeroController.getHurt(harm);
+    }else if(GameStats.currentHeroState==Constants.heroState.defence){
+        GameStats.unResponsedAttack=true;
+        GameStats.unResponsedHarm=harm;
     }
 }

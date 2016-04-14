@@ -4,13 +4,13 @@
 var GameOverUI = cc.Layer.extend({
     ctor: function () {
         this._super();
-        var bg=new cc.LayerColor(cc.color(0,0,0,126),cc.director.getVisibleSize().width,cc.director.getVisibleSize().height);
+        var bg=new cc.LayerColor(cc.color(0,0,0,126),cc.winSize.width,cc.winSize.height);
         this.addChild(bg,1);
         var gradeText=new cc.Sprite("#overText.png");
-        gradeText.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/4*3));
+        gradeText.setPosition(cc.p(cc.winSize.width/2,cc.winSize.height/4*3));
         this.addChild(gradeText,2);
         var grade=new cc.LabelTTF(GameStats.currentGrade+"",UIConstants.fontName,UIConstants.gameOverUI.fontSize,cc.size(100,50),cc.TEXT_ALIGNMENT_CENTER,cc.TEXT_ALIGNMENT_CENTER);
-        grade.setPosition(cc.p(cc.director.getVisibleSize().width/2+95,cc.director.getVisibleSize().height/4*3-34));
+        grade.setPosition(cc.p(cc.winSize.width/2+95,cc.winSize.height/4*3-34));
         this.addChild(grade,2);
         var retryBtn=new cc.MenuItemImage("#retry.png","#retry.png",this.onRetry,this);
         //var quitBtn=new cc.MenuItemImage("#quit.png","#quit.png",this.onQuit,this);
@@ -18,11 +18,11 @@ var GameOverUI = cc.Layer.extend({
         var rankBtn=new cc.MenuItemImage("#rankRed.png","#rankRed.png",this._openRank,this);
         var menu=new cc.Menu(retryBtn,rankBtn);
         menu.alignItemsHorizontally();
-        menu.setPosition(cc.p(cc.director.getVisibleSize().width/2,cc.director.getVisibleSize().height/2));
+        menu.setPosition(cc.p(cc.winSize.width/2,cc.winSize.height/2));
         this.addChild(menu,2);
 
         var shareText=new cc.Sprite("#share.png");
-        shareText.setPosition(cc.p(cc.director.getVisibleSize().width+cc.director.getVisibleOrigin().x-220,cc.director.getVisibleSize().height/4*3));
+        shareText.setPosition(cc.p(cc.winSize.width+cc.director.getVisibleOrigin().x-220,cc.winSize.height/4*3));
         this.addChild(shareText,2);
 
         var hasGift=false;
@@ -31,7 +31,7 @@ var GameOverUI = cc.Layer.extend({
             var giftText=new cc.LabelTTF("您获得了第"+rankLevel+"档激活码",UIConstants.fontName,UIConstants.gameOverUI.fontSize,cc.size(10*UIConstants.gameOverUI.fontSize,50),cc.TEXT_ALIGNMENT_CENTER,cc.TEXT_ALIGNMENT_CENTER);
             var operationText=new cc.LabelTTF("长按复制",UIConstants.fontName,UIConstants.gameOverUI.fontSize,cc.size(4*UIConstants.gameOverUI.fontSize,50),cc.TEXT_ALIGNMENT_LEFT,cc.TEXT_ALIGNMENT_CENTER);
             operationText.setColor(cc.color(254,226,71));
-            giftText.setPosition(cc.p(cc.director.getVisibleSize().width/2+cc.director.getVisibleOrigin().x-80,cc.director.getVisibleSize().height/3));
+            giftText.setPosition(cc.p(cc.winSize.width/2+cc.director.getVisibleOrigin().x-80,cc.winSize.height/3));
             giftText.setAnchorPoint(cc.p(0.5,0.5));
             operationText.setPosition(giftText.x+(giftText.getString().length-3)*UIConstants.gameOverUI.fontSize,giftText.y);
             this.addChild(giftText,2);
@@ -71,7 +71,7 @@ var GameOverUI = cc.Layer.extend({
             var noneText="该档次已经被抢光咯";
             var againText="少侠下次赶早来哦!";
             var noneGift=new cc.Sprite("#noneGift.png");
-            noneGift.setPosition(cc.p(cc.director.getVisibleSize().width/3+cc.director.getVisibleOrigin().x-60,cc.director.getVisibleSize().height/3));
+            noneGift.setPosition(cc.p(cc.winSize.width/3+cc.director.getVisibleOrigin().x-60,cc.winSize.height/3));
             this.addChild(noneGift,2);
             var sorryTextTTF=new cc.LabelTTF(sorryText,UIConstants.fontName,UIConstants.gameOverUI.fontSize,cc.size(sorryText.length*UIConstants.gameOverUI.fontSize,50),cc.TEXT_ALIGNMENT_CENTER,cc.TEXT_ALIGNMENT_CENTER);
             var noneTextTTF=new cc.LabelTTF(noneText,UIConstants.fontName,UIConstants.gameOverUI.fontSize,cc.size(noneText.length*UIConstants.gameOverUI.fontSize,50),cc.TEXT_ALIGNMENT_CENTER,cc.TEXT_ALIGNMENT_CENTER);
