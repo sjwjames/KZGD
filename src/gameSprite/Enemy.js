@@ -16,10 +16,12 @@ var Enemy = cc.Sprite.extend({
         this.type=this.wave%Constants.enemyTypes;
         this.harm+=this.wave;
         this.mySchedule=new MySchedule();
+        this.mySchedule.mySchedule(this.onAttackAnimated,GameStats.currentAttackTime/Constants.enemyAttackFrames,this);
     },
     walk: function () {
-        var time=(cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber-100))/((cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width-100))/this.walkTime);
-        var walkAction=cc.moveTo(time,cc.p(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber-100,cc.winSize.height/UIConstants.fightLayer.enemy_y_per));
+        //var time=(cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width*GameStats.currentEnemyNumber-100))/((cc.winSize.width-(UIConstants.fightLayer.hero_x+this.width-100))/this.walkTime);
+        var time=this.walkTime;
+        var walkAction=cc.moveTo(time,cc.p(UIConstants.fightLayer.hero_x+300*GameStats.currentEnemyNumber-100,cc.winSize.height/UIConstants.fightLayer.enemy_y_per));
         var callFunc=cc.callFunc(this.stop,this);
         var sequence = cc.sequence(walkAction,callFunc);
         this.runAction(sequence);
@@ -41,7 +43,6 @@ var Enemy = cc.Sprite.extend({
         this.animationAction = cc.animate(animation);
         var onAttackAction=cc.callFunc(this.unattack,this);
         var sequence=cc.sequence(this.animationAction,onAttackAction);
-        this.mySchedule.mySchedule(this.onAttackAnimated,GameStats.currentAttackTime/Constants.enemyAttackFrames,this);
         this.runAction(sequence);
 
     },
@@ -66,17 +67,22 @@ var Enemy = cc.Sprite.extend({
     },
     onAttackAnimated: function () {
         if(this.animationAction){
-            if (this.animationAction.getCurrentFrameIndex()<=7){
+            if (this.animationAction.getCurrentFrameIndex()<=5){
                 this.state=Constants.enemyState.attacking;
                 if(!GameStats.hasEntered){
                     cc.eventManager.dispatchCustomEvent("firstAttack");
                 }
-                EnemyController.doHarm(this.harm);
+
             }else{
                 this.state=Constants.enemyState.attack;
+                if(GameStats.currentHeroState==Constants.heroState.idle){
+                    EnemyController.doHarm(this.harm);
+                }
             }
 
+
         }
+
     },
     onExit: function () {
         this._super();

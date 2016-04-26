@@ -9,12 +9,10 @@ var HeroController=cc.Class.extend({
 });
 
 HeroController.defence=function (enemyList) {
-    console.log(GameStats.currentHeroState);
     if (GameStats.currentHeroState==Constants.heroState.idle){
         GameStats.currentHeroState=Constants.heroState.defence;
         //var noEnemyAttack=true;
         for (var i=0;i<enemyList.length;i++){
-            console.log(enemyList[i].state);
             if (enemyList[i].state==Constants.enemyState.attacking){
                 //noEnemyAttack=false;
                 GameStats.currentHeroState=Constants.heroState.success;

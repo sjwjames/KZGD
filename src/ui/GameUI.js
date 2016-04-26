@@ -45,12 +45,13 @@ var GameUI = cc.Layer.extend({
       }
    },
    _getHurt: function (event) {
+      var harm =event.getUserData().harm;
       if (GameStats.currentHealth==0){
          this.healthIndex.width=0;
          this.healthIndex_left.visible=false;
          this.healthIndex_right.visible=false;
       }else{
-         this.healthIndex.width*=(GameStats.currentHealth/Constants.heroHealth);
+         this.healthIndex.width-=217*(harm/Constants.heroHealth);
          this.healthIndex_right.x=this.healthIndex.x+this.healthIndex.width+this.healthIndex_right.width/2-0.5;
       }
 

@@ -37,13 +37,14 @@ var GameScene = cc.Scene.extend({
             this.fightLayer.removeChildByTag(3);
         }
         cc.director.pause();
-        return true;
+
     },
     onGameResumed: function (event) {
         this.removeChild(this.pauseUI,true);
         this.gameUI=new GameUI();
         this.addChild(this.gameUI,2);
         cc.eventManager.addListener(this.fightLayer.listener,this.fightLayer);
+        GameStats.currentHeroState=Constants.heroState.idle;
         cc.director.resume();
     },
     onGameOver: function (event) {

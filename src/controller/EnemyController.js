@@ -29,8 +29,6 @@ EnemyController.generateEnemy= function () {
 EnemyController.doHarm=function(harm){
     if (GameStats.currentHeroState==Constants.heroState.idle){
         HeroController.getHurt(harm);
-    }else if(GameStats.currentHeroState==Constants.heroState.defence){
-        GameStats.unResponsedAttack=true;
-        GameStats.unResponsedHarm=harm;
     }
+
 }
